@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+  <div class="container">
+    <h1>{{ subject }}</h1>
+    <hr />
+    <h2>{{ learning_model.name }}</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>단계</th>
+          <th>교수 · 학습활동</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for step in learning_model.steps %}
+          {% for activity in step.activities %}
+            <tr>
+              {% if loop.index0 == 0 %}
+                <td rowspan="{{ step.activities|length }}">{{ step.name }}</td>
+              {% endif %}
+              <td>{{ activity }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
