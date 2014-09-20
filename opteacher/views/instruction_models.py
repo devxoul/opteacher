@@ -6,12 +6,7 @@ from flask import Blueprint, render_template, request
 
 from werkzeug.exceptions import NotFound
 
-from opteacher.models.instruction_model import (
-    InstructionModel,
-    LearningModel,
-    # LearningActivity,
-    # LearningStep
-)
+from opteacher.models.instruction_model import InstructionModel, LearningModel
 
 
 mod = Blueprint('instruction_models', __name__,
@@ -69,12 +64,10 @@ def validate(subject):
     for k, v in request.form.iteritems():
         if k.startswith('step-'):
             step_id = k[5:]
-            # step = LearningStep.query.get(step_id)
             input_steps.setdefault(step_id, v.strip())
 
         elif k.startswith('activity-'):
             activity_id = k[9:]
-            # activity = LearningActivity.query.get(activity_id)
             input_activities.setdefault(activity_id, v.strip())
 
     blank_step_ids = form.get('blank_step_ids', '').split(',')
