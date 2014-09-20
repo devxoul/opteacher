@@ -9,9 +9,25 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></link>
+
+    <style>
+      footer {
+        margin-top: 120px;
+        border-top: 1px solid #dedede;
+        padding: 40px 0;
+        color: #777;
+      }
+    </style>
   </head>
+
   <body>
     {% block body %}
     {% endblock %}
+    <footer>
+      <div class="container text-center">
+        <p>사랑하는 여자친구를 위해서</p>
+        <p>© 2014 <a href="http://xoul.kr">전수열</a></p>
+      </div>
+    </footer>
   </body>
 </html>
