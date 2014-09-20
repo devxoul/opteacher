@@ -1,29 +1,54 @@
 {% extends "layout.html" %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %}
+  {{ instruction_model.name }} :: {{ learning_model.name }}
+{% endblock %}
 {% block body %}
   <div class="container">
-    <h1>{{ subject }}</h1>
+    <h1>
+      <small>{{ instruction_model.name }}</small>
+      <br />
+      {{ learning_model.name }}
+    </h1>
     <hr />
-    <h2>{{ learning_model.name }}</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>단계</th>
-          <th>교수 · 학습활동</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for step in learning_model.steps %}
-          {% for activity in step.activities %}
-            <tr>
-              {% if loop.index0 == 0 %}
-                <td rowspan="{{ step.activities|length }}">{{ step.name }}</td>
-              {% endif %}
-              <td>{{ activity }}</td>
-            </tr>
+    <form class="form" method="POST"
+          action="{{ url_for('instruction_models.validate',
+                             subject=learning_model.subject) }}">
+      <input type="hidden" name="name" value="{{ learning_model.name }}" />
+      <table class="table table-bordered">
+        <thead>
+          <tr class="active">
+            <th>단계</th>
+            <th>교수 · 학습활동</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for step in learning_model.steps %}
+            {% for activity in step.activities %}
+              <tr>
+                {% if loop.index0 == 0 %}
+                  <td rowspan="{{ step.activities|length }}">
+                    {% if (True, False)|random %}
+                      <input class="form-control" />
+                    {% else %}
+                      {{ step.name }}
+                    {% endif %}
+                  </td>
+                {% endif %}
+
+                <td>
+                  {% if (True, False)|random %}
+                    <input class="form-control" />
+                  {% else %}
+                    {{ activity.name }}
+                  {% endif %}
+                </tr>
+              </tr>
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+
+      <input type="submit" class="btn btn-primary pull-right" value="검사받기" />
+    </form>
   </div>
 {% endblock %}

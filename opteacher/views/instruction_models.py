@@ -1,17 +1,30 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, g, render_template
-
 import random
+
+from flask import Blueprint, render_template
+
+from opteacher.models.instruction_model import InstructionModel
+
 
 mod = Blueprint('instruction_models', __name__,
                 url_prefix='/instruction_models')
 
 
+@mod.route('/')
+def index():
+    return 'Hi'
+
+
 @mod.route('/<string:subject>')
-def index(subject):
-    instruction_model = g.instruction_models.get(subject)
-    random_model = random.choice(instruction_model.learning_models)
+def subject(subject):
+    instruction = InstructionModel.query.filter_by(subject=subject).first()
+    learning = random.choice(instruction.learning_models)
     return render_template('instruction_models.html',
-                           subject=instruction_model.name,
-                           learning_model=random_model)
+                           instruction_model=instruction,
+                           learning_model=learning)
+
+
+@mod.route('/<string:subject>', methods=['POST'])
+def validate(subject):
+    pass

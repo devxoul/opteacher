@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from flask import g
-
-from models.instruction_model import InstructionModel, LearningModel,\
-    LearningStep
-
 import os
+
+from opteacher.ext import db
+from opteacher.models.instruction_model import (
+    InstructionModel,
+    LearningModel,
+    LearningStep,
+    LearningActivity
+)
 
 
 _verbose = False
@@ -19,26 +22,46 @@ def parse_instruction_models(app):
 
     for l in lines:
         line = l.decode('utf-8')
-        if line[0] != ' ':
-            instruction = InstructionModel()
-            instruction.name = line.split(':')[1].strip()
-            subject = line.split(':')[0].strip()
-            subjects[subject] = instruction
 
-        elif line[:12] == ' ' * 12:
-            step = subjects[subject].learning_models[-1].steps[-1]
-            step.activities.append(line.strip())
+        # activity
+        if line[:12] == ' ' * 12:
+            instruction_model = subjects[subject]
+            learning_model = instruction_model.learning_models[-1]
+            step = learning_model.steps[-1]
 
+            activity = LearningActivity()
+            activity.learning_step = step
+            activity.name = line.strip()
+            db.session.add(activity)
+
+        # step
         elif line[:8] == ' ' * 8:
-            step = LearningStep()
-            step.name = line.strip()
-            subjects[subject].learning_models[-1].steps.append(step)
+            instruction_model = subjects[subject]
+            learning_model = instruction_model.learning_models[-1]
 
+            step = LearningStep()
+            step.learning_model = learning_model
+            step.name = line.strip()
+            db.session.add(step)
+
+        # learning model
         elif line[:4] == ' ' * 4:
-            model = LearningModel()
-            model.name = line.strip()
-            model.subject = subject
-            subjects[subject].learning_models.append(model)
+            instruction_model = subjects[subject]
+
+            learning_model = LearningModel()
+            learning_model.instruction_model = instruction_model
+            learning_model.name = line.strip()
+            db.session.add(learning_model)
+
+        # instruction model
+        elif line[0] != ' ':
+            instruction_model = InstructionModel()
+            instruction_model.name = line.split(':')[1].strip()
+            instruction_model.subject = line.split(':')[0].strip()
+            subjects[subject] = instruction_model
+            db.session.add(instruction_model)
+
+    db.session.commit()
 
     if _verbose:
         for instruction_model in subjects.values():
@@ -49,4 +72,3 @@ def parse_instruction_models(app):
                     print ' ' * 7, step.name
                     for activity in step.activities:
                         print ' ' * 11, activity
-    g.instruction_models = subjects
