@@ -8,6 +8,9 @@ from models.instruction_model import InstructionModel, LearningModel,\
 import os
 
 
+_verbose = False
+
+
 def parse_instruction_models(app):
     path = os.path.join(app.static_folder, 'data/instruction_models.txt')
     lines = open(path).readlines()
@@ -37,12 +40,13 @@ def parse_instruction_models(app):
             model.subject = subject
             subjects[subject].learning_models.append(model)
 
-    for instruction_model in subjects.values():
-        print instruction_model.name
-        for learning_model in instruction_model.learning_models:
-            print ' ' * 3, learning_model.name
-            for step in learning_model.steps:
-                print ' ' * 7, step.name
-                for activity in step.activities:
-                    print ' ' * 11, activity
+    if _verbose:
+        for instruction_model in subjects.values():
+            print instruction_model.name
+            for learning_model in instruction_model.learning_models:
+                print ' ' * 3, learning_model.name
+                for step in learning_model.steps:
+                    print ' ' * 7, step.name
+                    for activity in step.activities:
+                        print ' ' * 11, activity
     g.instruction_models = subjects
