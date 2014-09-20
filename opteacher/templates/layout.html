@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>예지선생님 :: {% block title %}{% endblock %}</title>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -11,6 +11,26 @@
     <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></link>
 
     <style>
+      div.navbar-header {
+        float: left;
+        margin-right: 0 !important;
+      }
+
+      ul.nav.navbar-nav {
+        float: left;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+
+      ul.nav.navbar-nav a {
+        padding-top: 15px !important;
+        padding-bottom: 15px !important;
+      }
+
+      div.jumbotron {
+        margin-top: -20px;
+      }
+
       footer {
         margin-top: 120px;
         border-top: 1px solid #dedede;
@@ -21,6 +41,16 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{{ url_for('home.index') }}">예지선생님</a>
+        </div>
+        <ul class="nav navbar-nav">
+          {% block navbar %}{% endblock %}
+        </ul>
+      </div>
+    </nav>
     {% block body %}
     {% endblock %}
     <footer>

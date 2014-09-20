@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  {{ instruction_model.name }} :: {{ learning_model.name }}
+  {{ instruction_model.name }}
+{% endblock %}
+
+{% block navbar %}
+  <li><a href="{{ url_for('instruction_models.index') }}">수업 모형</a></li>
 {% endblock %}
 
 {% block body %}

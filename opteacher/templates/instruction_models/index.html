@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}수업 모형{% endblock %}
+{% block body %}
+  <div class="container">
+    <h1>수업 모형</h1>
+    <hr />
+
+    <div class="list-group">
+      {% for instruction_model in instruction_models %}
+        <a class="list-group-item"
+           href="{{ url_for('instruction_models.quiz', subject=instruction_model.subject) }}">
+           {{ instruction_model.name }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}홈{% endblock %}
+{% block body %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1>예지선생님</h1>
+    </div>
+  </div>
+  <div class="container">
+    <div class="list-group">
+      <a class="list-group-item" href="{{ url_for('instruction_models.index') }}">
+        과목별 수업 모형
+      </a>
+    </div>
+  </div>
+{% endblock %}

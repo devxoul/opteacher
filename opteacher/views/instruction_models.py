@@ -15,11 +15,14 @@ mod = Blueprint('instruction_models', __name__,
 
 @mod.route('/')
 def index():
-    return 'Hi'
+    instruction_models = InstructionModel.query.all()
+    print instruction_models
+    return render_template('instruction_models/index.html',
+                           instruction_models=instruction_models)
 
 
 @mod.route('/<string:subject>')
-def subject(subject):
+def quiz(subject):
     instruction = InstructionModel.query.filter_by(subject=subject).first()
     if not instruction:
         raise NotFound()
@@ -36,7 +39,7 @@ def subject(subject):
             if random.getrandbits(1):
                 blank_activity_ids.append(str(activity.id))
 
-    return render_template('instruction_models.html',
+    return render_template('instruction_models/quiz.html',
                            instruction_model=instruction,
                            learning_model=learning,
                            blank_step_ids=blank_step_ids,
@@ -73,7 +76,7 @@ def validate(subject):
     blank_step_ids = form.get('blank_step_ids', '').split(',')
     blank_activity_ids = form.get('blank_activity_ids', '').split(',')
 
-    return render_template('instruction_models.html',
+    return render_template('instruction_models/quiz.html',
                            instruction_model=instruction,
                            learning_model=learning,
                            blank_step_ids=blank_step_ids,
