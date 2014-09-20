@@ -13,7 +13,7 @@
     </h1>
     <hr />
 
-    <form class="form" method="POST"
+    <form class="form" autocomplete="off" method="POST"
           action="{{ url_for('instruction_models.validate', subject=instruction_model.subject) }}">
 
       <input type="hidden" name="learning_model_id" value="{{ learning_model.id }}" />
