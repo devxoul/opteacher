@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
+
 {% block title %}
   {{ instruction_model.name }} :: {{ learning_model.name }}
 {% endblock %}
+
 {% block body %}
   <div class="container">
     <h1>
@@ -10,10 +12,14 @@
       {{ learning_model.name }}
     </h1>
     <hr />
+
     <form class="form" method="POST"
-          action="{{ url_for('instruction_models.validate',
-                             subject=learning_model.subject) }}">
-      <input type="hidden" name="name" value="{{ learning_model.name }}" />
+          action="{{ url_for('instruction_models.validate', subject=instruction_model.subject) }}">
+
+      <input type="hidden" name="learning_model_id" value="{{ learning_model.id }}" />
+      <input type="hidden" name="blank_step_ids" value="{{ blank_step_ids|join(',') }}" />
+      <input type="hidden" name="blank_activity_ids" value="{{ blank_activity_ids|join(',') }}" />
+
       <table class="table table-bordered">
         <thead>
           <tr class="active">
@@ -23,12 +29,30 @@
         </thead>
         <tbody>
           {% for step in learning_model.steps %}
+          {% set step_id = step.id|string %}
             {% for activity in step.activities %}
+              {% set activity_id = activity.id|string %}
               <tr>
                 {% if loop.index0 == 0 %}
                   <td rowspan="{{ step.activities|length }}">
-                    {% if (True, False)|random %}
-                      <input class="form-control" />
+                    {% if step_id in blank_step_ids %}
+                      {% set input = input_steps[step_id] %}
+                      {% if not input %}
+                        {% set validate_class = '' %}
+                      {% elif input == step.name %}
+                        {% set validate_class = 'has-success' %}
+                      {% else %}
+                        {% set validate_class = 'has-error' %}
+                      {% endif %}
+                      <div class="form-group {{ validate_class }}">
+                        <input class="form-control" name="step-{{ step_id }}"
+                               value="{{ input }}" />
+                        {% if validate_class == 'has-error' %}
+                          <label class="control-label">
+                            <small>{{ step.name }}</small>
+                          </label>
+                        {% endif %}
+                      </div>
                     {% else %}
                       {{ step.name }}
                     {% endif %}
@@ -36,8 +60,24 @@
                 {% endif %}
 
                 <td>
-                  {% if (True, False)|random %}
-                    <input class="form-control" />
+                  {% if activity_id in blank_activity_ids %}
+                    {% set input = input_activities[activity_id] %}
+                    {% if not input %}
+                      {% set validate_class = '' %}
+                    {% elif input == step.name %}
+                      {% set validate_class = 'has-success' %}
+                    {% else %}
+                      {% set validate_class = 'has-error' %}
+                    {% endif %}
+                    <div class="form-group {{ validate_class }}">
+                      <input class="form-control" name="activity-{{ activity_id }}"
+                             value="{{ input }}" />
+                      {% if validate_class == 'has-error' %}
+                        <label class="control-label">
+                          <small>{{ activity.name }}</small>
+                        </label>
+                      {% endif %}
+                    </div>
                   {% else %}
                     {{ activity.name }}
                   {% endif %}
