@@ -39,7 +39,7 @@
                       {% set input = input_steps[step_id] %}
                       {% if not input %}
                         {% set validate_class = '' %}
-                      {% elif input == step.name %}
+                      {% elif input.replace(' ', '') == step.name.replace(' ', '') %}
                         {% set validate_class = 'has-success' %}
                       {% else %}
                         {% set validate_class = 'has-error' %}
@@ -47,11 +47,15 @@
                       <div class="form-group {{ validate_class }}">
                         <input class="form-control" name="step-{{ step_id }}"
                                value="{{ input }}" />
-                        {% if validate_class == 'has-error' %}
-                          <label class="control-label">
-                            <small>{{ step.name }}</small>
-                          </label>
-                        {% endif %}
+                        <label class="control-label">
+                          <small>
+                            {% if validate_class == 'has-success' %}
+                              참! 잘했어요
+                            {% elif validate_class == 'has-error' %}
+                              {{ step.name }}
+                            {% endif %}
+                          </small>
+                        </label>
                       </div>
                     {% else %}
                       {{ step.name }}
@@ -64,7 +68,7 @@
                     {% set input = input_activities[activity_id] %}
                     {% if not input %}
                       {% set validate_class = '' %}
-                    {% elif input == step.name %}
+                    {% elif input.replace(' ', '') == activity.name.replace(' ', '') %}
                       {% set validate_class = 'has-success' %}
                     {% else %}
                       {% set validate_class = 'has-error' %}
@@ -72,11 +76,15 @@
                     <div class="form-group {{ validate_class }}">
                       <input class="form-control" name="activity-{{ activity_id }}"
                              value="{{ input }}" />
-                      {% if validate_class == 'has-error' %}
-                        <label class="control-label">
-                          <small>{{ activity.name }}</small>
-                        </label>
-                      {% endif %}
+                      <label class="control-label">
+                        <small>
+                          {% if validate_class == 'has-success' %}
+                            참! 잘했어요
+                          {% elif validate_class == 'has-error' %}
+                            {{ activity.name }}
+                          {% endif %}
+                        </small>
+                      </label>
                     </div>
                   {% else %}
                     {{ activity.name }}
