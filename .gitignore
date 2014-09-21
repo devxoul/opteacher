@@ -3,6 +3,7 @@
 venv/
 *.pyc
 *.db
+/var/*
 
 *.sublime-project
 *.sublime-workspace
