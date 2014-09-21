@@ -17,6 +17,7 @@ def initdb():
 @manager.command
 def run():
     initdb()
+    app.debug = True
     app.run('0.0.0.0', 8000)
 
 

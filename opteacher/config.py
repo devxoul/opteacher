@@ -1,4 +1,2 @@
-DEBUG = True
-
 SQLALCHEMY_DATABASE_URI = 'sqlite:///../opteacher.db'
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
