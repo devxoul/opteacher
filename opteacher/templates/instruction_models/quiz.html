@@ -8,6 +8,8 @@
   <li><a href="{{ url_for('instruction_models.index') }}">수업 모형</a></li>
 {% endblock %}
 
+
+
 {% block body %}
   <div class="container">
     <h1>
@@ -33,67 +35,16 @@
         </thead>
         <tbody>
           {% for step in learning_model.steps %}
-          {% set step_id = step.id|string %}
             {% for activity in step.activities %}
-              {% set activity_id = activity.id|string %}
               <tr>
                 {% if loop.index0 == 0 %}
-                  <td rowspan="{{ step.activities|length }}">
-                    {% if step_id in blank_step_ids %}
-                      {% set input = input_steps[step_id] %}
-                      {% if not input %}
-                        {% set validate_class = '' %}
-                      {% elif input.replace(' ', '') == step.name.replace(' ', '') %}
-                        {% set validate_class = 'has-success' %}
-                      {% else %}
-                        {% set validate_class = 'has-error' %}
-                      {% endif %}
-                      <div class="form-group {{ validate_class }}">
-                        <input class="form-control" name="step-{{ step_id }}"
-                               value="{{ input }}" />
-                        <label class="control-label">
-                          <small>
-                            {% if validate_class == 'has-success' %}
-                              참! 잘했어요
-                            {% elif validate_class == 'has-error' %}
-                              {{ step.name }}
-                            {% endif %}
-                          </small>
-                        </label>
-                      </div>
-                    {% else %}
-                      {{ step.name }}
-                    {% endif %}
-                  </td>
+                  <td rowspan="{{ step.activities|length }}">{{ render_step(step) }}</td>
                 {% endif %}
-
-                <td>
-                  {% if activity_id in blank_activity_ids %}
-                    {% set input = input_activities[activity_id] %}
-                    {% if not input %}
-                      {% set validate_class = '' %}
-                    {% elif input.replace(' ', '') == activity.name.replace(' ', '') %}
-                      {% set validate_class = 'has-success' %}
-                    {% else %}
-                      {% set validate_class = 'has-error' %}
-                    {% endif %}
-                    <div class="form-group {{ validate_class }}">
-                      <input class="form-control" name="activity-{{ activity_id }}"
-                             value="{{ input }}" />
-                      <label class="control-label">
-                        <small>
-                          {% if validate_class == 'has-success' %}
-                            참! 잘했어요
-                          {% elif validate_class == 'has-error' %}
-                            {{ activity.name }}
-                          {% endif %}
-                        </small>
-                      </label>
-                    </div>
-                  {% else %}
-                    {{ activity.name }}
-                  {% endif %}
-                </td>
+                <td>{{ render_activity(activity) }}</td>
+              </tr>
+            {% else %}
+              <tr>
+                <td>{{ render_step(step) }}</td>
               </tr>
             {% endfor %}
           {% endfor %}
@@ -106,3 +57,69 @@
     </form>
   </div>
 {% endblock %}
+
+
+{% macro render_step(step) %}
+  {% set step_id = step.id|string %}
+
+  {% if step_id in blank_step_ids %}
+    {% set input = input_steps[step_id] %}
+    {% if not input %}
+      {% set validate_class = '' %}
+    {% elif input.replace(' ', '') == step.name.replace(' ', '') %}
+      {% set validate_class = 'has-success' %}
+    {% else %}
+      {% set validate_class = 'has-error' %}
+    {% endif %}
+
+    <div class="form-group {{ validate_class }}">
+      <input class="form-control" name="step-{{ step_id }}"
+             value="{{ input }}" />
+      <label class="control-label">
+        <small>
+          {% if validate_class == 'has-success' %}
+            참! 잘했어요
+          {% elif validate_class == 'has-error' %}
+            {{ step.name }}
+          {% endif %}
+        </small>
+      </label>
+    </div>
+
+  {% else %}
+    {{ step.name }}
+  {% endif %}
+{% endmacro %}
+
+
+{% macro render_activity(activity) %}
+  {% set activity_id = activity.id|string %}
+
+  {% if activity_id in blank_activity_ids %}
+    {% set input = input_activities[activity_id] %}
+    {% if not input %}
+      {% set validate_class = '' %}
+    {% elif input.replace(' ', '') == activity.name.replace(' ', '') %}
+      {% set validate_class = 'has-success' %}
+    {% else %}
+      {% set validate_class = 'has-error' %}
+    {% endif %}
+
+    <div class="form-group {{ validate_class }}">
+      <input class="form-control" name="activity-{{ activity_id }}"
+             value="{{ input }}" />
+      <label class="control-label">
+        <small>
+          {% if validate_class == 'has-success' %}
+            참! 잘했어요
+          {% elif validate_class == 'has-error' %}
+            {{ activity.name }}
+          {% endif %}
+        </small>
+      </label>
+    </div>
+
+  {% else %}
+    {{ activity.name }}
+  {% endif %}
+{% endmacro %}
