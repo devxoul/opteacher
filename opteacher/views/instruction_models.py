@@ -16,7 +16,6 @@ mod = Blueprint('instruction_models', __name__,
 @mod.route('/')
 def index():
     instruction_models = InstructionModel.query.all()
-    print instruction_models
     return render_template('instruction_models/index.html',
                            instruction_models=instruction_models)
 
