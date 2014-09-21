@@ -31,8 +31,13 @@ def start():
 def stop():
     with verbose("Stopping") as v:
         v.local("uwsgi --stop %s" % PID_PATH)
+
     with verbose("Removing pid file") as v:
         v.local("rm %s" % PID_PATH)
+
+    with verbose("Killing progress") as v:
+        v.local("ps aux | grep %s | awk '{print $2}' | "
+                "xargs kill -9 2>/dev/null" % CONFIG_PATH)
 
 
 @command
