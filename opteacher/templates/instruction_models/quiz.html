@@ -30,7 +30,9 @@
         <thead>
           <tr class="active">
             <th>단계</th>
-            <th>교수 · 학습활동</th>
+            {% if depth == 2 %}
+              <th>교수 · 학습활동</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>

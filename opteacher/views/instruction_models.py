@@ -38,13 +38,20 @@ def quiz(subject):
             if random.getrandbits(1):
                 blank_activity_ids.append(str(activity.id))
 
+    depth = 1
+    for step in learning.steps:
+        if len(step.activities):
+            depth = 2
+            break
+
     return render_template('instruction_models/quiz.html',
                            instruction_model=instruction,
                            learning_model=learning,
                            blank_step_ids=blank_step_ids,
                            blank_activity_ids=blank_activity_ids,
                            input_steps=None,
-                           input_activities=None)
+                           input_activities=None,
+                           depth=depth)
 
 
 @mod.route('/<string:subject>', methods=['POST'])
@@ -75,10 +82,17 @@ def validate(subject):
     blank_step_ids = form.get('blank_step_ids', '').split(',')
     blank_activity_ids = form.get('blank_activity_ids', '').split(',')
 
+    depth = 1
+    for step in learning.steps:
+        if len(step.activities):
+            depth = 2
+            break
+
     return render_template('instruction_models/quiz.html',
                            instruction_model=instruction,
                            learning_model=learning,
                            blank_step_ids=blank_step_ids,
                            blank_activity_ids=blank_activity_ids,
                            input_steps=input_steps,
-                           input_activities=input_activities)
+                           input_activities=input_activities,
+                           depth=depth)
