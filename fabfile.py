@@ -4,7 +4,7 @@ from fabric.colors import blue, red
 
 HOME_PATH = '/home/teacher/opteacher'
 CONFIG_PATH = HOME_PATH + '/config/uwsgi.ini'
-PID_PATH = HOME_PATH + '/var/opteacher.pid'
+PID_PATH = HOME_PATH + '/var/uwsgi.pid'
 
 
 def command(f):
