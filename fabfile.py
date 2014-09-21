@@ -17,6 +17,10 @@ def command(f):
     return decorator
 
 
+def venv(command):
+    return 'source ./venv/bin/activate && %s' % command
+
+
 @command
 def start():
     with verbose("Starting") as v:
@@ -32,7 +36,7 @@ def stop():
 
 
 @command
-def deploy():
+def deploy(req=False):
     with cd('opteacher'):
         with verbose("Connecting") as v:
             v.run('source ./venv/bin/activate')
@@ -44,7 +48,11 @@ def deploy():
             v.run('git pull')
 
         with verbose("Installing requirements") as v:
-            v.run('pip install -r requirements.txt')
+            v.run(venv('pip install -r requirements.txt'))
+
+        with verbose("Initializing database") as v:
+            v.run(venv('python manage.py initdb'))
 
         with verbose("Starting") as v:
-            v.run('fab start')
+            v.run(venv('fab stop'))
+            v.run(venv('fab start'))
