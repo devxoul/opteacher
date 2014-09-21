@@ -1,5 +1,5 @@
 from fabric.api import cd, env, quiet
-from opteacher.fabric_verbose import verbose
+from fabric_verbose import verbose
 
 
 env.hosts = ['teacher@xoul.kr']
