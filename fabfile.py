@@ -1,5 +1,8 @@
-from fabric.api import abort, local, quiet
-from fabric.colors import blue, red
+from fabric.api import cd, env, quiet
+from opteacher.fabric_verbose import verbose
+
+
+env.hosts = ['teacher@xoul.kr']
 
 
 HOME_PATH = '/home/teacher/opteacher'
@@ -14,28 +17,34 @@ def command(f):
     return decorator
 
 
-def _abort(message):
-    abort(red(message))
-
-
 @command
 def start():
-    cmd = 'uwsgi %s --enable-threads' % CONFIG_PATH
-    print blue("* Starting..."),
-    rv = local(cmd, capture=True)
-    if rv.succeeded:
-        print blue("Done")
-    else:
-        print red("Failed")
-        _abort(rv.stderr)
+    with verbose("Starting") as v:
+        v.local('uwsgi %s --enable-threads' % CONFIG_PATH)
 
 
 @command
 def stop():
-    print blue("* Stopping..."),
-    stop_uwsgi = "uwsgi --stop %s" % PID_PATH
-    rm_pid = "rm %s" % PID_PATH
-    if local(stop_uwsgi).succeeded and local(rm_pid).succeeded:
-        print blue("Done")
-    else:
-        print red("Failed")
+    with verbose("Stopping") as v:
+        v.local("uwsgi --stop %s" % PID_PATH)
+    with verbose("Removing pid file") as v:
+        v.local("rm %s" % PID_PATH)
+
+
+@command
+def deploy():
+    with cd('opteacher'):
+        with verbose("Connecting") as v:
+            v.run('source ./venv/bin/activate')
+
+        with verbose("Discarding local changes") as v:
+            v.run('git reset HEAD; git clean -fd; git checkout .')
+
+        with verbose("Pulling source code") as v:
+            v.run('git pull')
+
+        with verbose("Installing requirements") as v:
+            v.run('pip install -r requirements.txt')
+
+        with verbose("Starting") as v:
+            v.run('fab start')
