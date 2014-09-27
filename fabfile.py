@@ -50,7 +50,9 @@ def deploy(req=False):
             v.run('git reset HEAD; git clean -fd; git checkout .')
 
         with verbose("Pulling source code") as v:
-            v.run('git pull')
+            v.run('git fetch origin')
+            v.run('git checkout master')
+            v.run('git reset --hard origin/master')
 
         with verbose("Installing requirements") as v:
             v.run(venv('pip install -r requirements.txt'))
