@@ -9,6 +9,12 @@ from werkzeug.exceptions import NotFound
 from opteacher.models.instruction_model import InstructionModel, LearningModel
 
 
+def table_titles(subject):
+    if subject == 'english':
+        return [u'학습 내용 성취기준', u'학습 활동의 예']
+    return [u'단계', u'교수 · 학습활동']
+
+
 mod = Blueprint('instruction_models', __name__,
                 url_prefix='/instruction_models')
 
@@ -34,6 +40,8 @@ def quiz(subject):
     for step in learning.steps:
         if random.getrandbits(1):
             blank_step_ids.append(str(step.id))
+        if subject == 'english':
+            continue
         for activity in step.activities:
             if random.getrandbits(1):
                 blank_activity_ids.append(str(activity.id))
@@ -45,6 +53,7 @@ def quiz(subject):
             break
 
     return render_template('instruction_models/quiz.html',
+                           table_titles=table_titles(subject),
                            instruction_model=instruction,
                            learning_model=learning,
                            blank_step_ids=blank_step_ids,
@@ -89,6 +98,7 @@ def validate(subject):
             break
 
     return render_template('instruction_models/quiz.html',
+                           table_titles=table_titles(subject),
                            instruction_model=instruction,
                            learning_model=learning,
                            blank_step_ids=blank_step_ids,
