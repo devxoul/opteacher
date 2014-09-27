@@ -38,7 +38,7 @@ def quiz(subject):
     blank_activity_ids = []
 
     for step in learning.steps:
-        if random.getrandbits(1):
+        if subject == 'english' or random.getrandbits(1):
             blank_step_ids.append(str(step.id))
         if subject == 'english':
             continue
