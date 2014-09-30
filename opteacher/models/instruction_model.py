@@ -8,7 +8,7 @@ class InstructionModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(20), nullable=False)
     name = db.Column(db.String(40), nullable=False)
-    learning_models = db.relationship('LearningModel',
+    learning_models = db.relationship('LearningModel', lazy='dynamic',
                                       backref='instruction_model')
 
 
@@ -19,6 +19,7 @@ class LearningModel(db.Model):
                                      db.ForeignKey('instruction_model.id'))
     name = db.Column(db.String(40), nullable=False)
     steps = db.relationship('LearningStep', backref='learning_model')
+    count = db.Column(db.Integer, nullable=False, default=0)
 
 
 class LearningStep(db.Model):

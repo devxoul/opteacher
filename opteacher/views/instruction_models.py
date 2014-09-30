@@ -3,9 +3,11 @@
 import random
 
 from flask import Blueprint, render_template, request
+from sqlalchemy import func
 
 from werkzeug.exceptions import NotFound
 
+from opteacher.ext import db
 from opteacher.models.instruction_model import InstructionModel, LearningModel
 
 
@@ -32,7 +34,19 @@ def quiz(subject):
     if not instruction:
         raise NotFound()
 
-    learning = random.choice(instruction.learning_models)
+    min_count = db.session.query(func.min(LearningModel.count))\
+                          .filter(LearningModel.instruction_model_id
+                                  == instruction.id)\
+                          .first()[0]
+
+    learning_models = instruction.learning_models\
+                                 .filter(LearningModel.count == min_count)\
+                                 .all()
+    learning = random.choice(learning_models)
+    learning.count += 1
+
+    db.session.add(learning)
+    db.session.commit()
 
     blank_step_ids = []
     blank_activity_ids = []
